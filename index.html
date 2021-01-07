@@ -28,9 +28,9 @@
             <input type="text" id="color"/></p>
     
         <p><label>Day of the week:</label><br>
-            <input type="text" id="height"/></p>
+            <input type="text" id="day"/></p>
     
-        <button onclick="setUserID();userProps();">Log In</button>
+        <button onclick="setUserID()">Log In</button>
     
         <p><button onclick="logevent()">Log event 1</button>
         <button onclick="logevent2()">Log event 2</button>
@@ -60,5 +60,102 @@
         <p>
             <button onclick="logOut()">Log Out</button>
         </p> 
+
+    <script>
+        
+        var now = Date.now();
+        console.log(now);
+                
+        function setUserID() {
+            var user = document.getElementById("UserID").value;
+            var anon = analytics.user().anonymousId();
+            
+            document.getElementById("currentUser").innerHTML = user + " is logged in!";
+            
+            if(user != "") {
+                analytics.identify(user, {
+                    anonymousId: analytics.user().anonymousId(),
+                    name: user,
+                    age: document.getElementById("age").value,
+                    favFood: document.getElementById("favfood").value
+                });
+            }
+            else if(user == "") {
+                
+                analytics.identify(null, {
+                    age: document.getElementById("age").value,
+                    favFood: document.getElementById("favfood").value
+                });
+                console.log(analytics.user().anonymousId());
+            }
+        }
+        
+        function item() {
+            
+                analytics.track("Purchased Item", {
+                productId: document.getElementById("items").value,
+                quantity: document.getElementById("quantity").value,
+                price: 8.99,
+                revenueType: "income"
+            }, {
+               "Amplitude": {
+                   "session_id": now
+               } 
+            });
+        }
+        
+        function logevent() {
+                analytics.track("Log Event 1", {
+                ColorShirt: document.getElementById("color").value,
+                Day: document.getElementById("day").value
+            }, {
+               "Amplitude": {
+                   "session_id": now
+               } 
+            });
+        }
+        
+        function logevent2() {
+                analytics.track("Log Event 2", {
+                ColorShirt: document.getElementById("color").value,
+                Day: document.getElementById("day").value
+            }, {
+               "Amplitude": {
+                   "session_id": now
+               } 
+            });
+        }
+        
+        function logevent3() {
+                analytics.track("Log Event 3", {
+                ColorShirt: document.getElementById("color").value,
+                Day: document.getElementById("day").value
+            }, {
+               "Amplitude": {
+                   "session_id": now
+               } 
+            });
+        }
+        
+        function logOut() {
+            analytics.track("Logged Out", {
+                
+            },{
+                "Amplitude": {
+                    "session_id": now
+                }
+            });
+            analytics.reset()
+            
+            document.getElementById("UserID").value = "";
+            document.getElementById("favfood").value = "";
+            document.getElementById("age").value = "";
+            document.getElementById("color").value = "";
+            document.getElementById("day").value = "";
+            document.getElementById("currentUser").innerHTML = "There is no user logged in! This program logs events as Anonymous when there is no user logged in.";
+        }
+    
+
+    </script>
     </body>
 </html>
